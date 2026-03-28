@@ -1,120 +1,65 @@
-# System Patterns: Next.js Starter Template
+# System Patterns: Ultimate Voice Bridge (UVB)
 
 ## Architecture Overview
 
 ```
 src/
-├── app/                    # Next.js App Router
-│   ├── layout.tsx          # Root layout + metadata
-│   ├── page.tsx            # Home page
-│   ├── globals.css         # Tailwind imports + global styles
-│   └── favicon.ico         # Site icon
-└── (expand as needed)
-    ├── components/         # React components (add when needed)
-    ├── lib/                # Utilities and helpers (add when needed)
-    └── db/                 # Database files (add via recipe)
+├── app/                           # Next.js App Router
+│   ├── layout.tsx                 # Root layout (Orbitron, Inter, JetBrains Mono)
+│   ├── page.tsx                   # Main dashboard (renders all sections)
+│   ├── globals.css                # Tailwind + UVB theme tokens + custom styles
+│   ├── api/health/route.ts        # Health check endpoint
+│   ├── chat/ChatInterface.tsx     # Chat UI component
+│   ├── voice-analysis/            # Voice analysis page component
+│   ├── media/                     # Media studio page component
+│   ├── podcast/                   # Podcast studio page component
+│   ├── memory/                    # Memory bank page component
+│   └── settings/                  # Settings page component
+├── components/
+│   ├── animated/
+│   │   ├── GalaxyBackground.tsx   # Canvas particle system
+│   │   ├── UIEffects.tsx          # GlowOrb, ScanLine, FloatingDot
+│   │   └── VoiceVisualizer.tsx    # Real-time audio bars
+│   ├── layout/
+│   │   ├── Sidebar.tsx            # Collapsible navigation
+│   │   └── Header.tsx             # Top bar with status/search
+│   └── ui/                        # (Reusable UI components)
+├── stores/
+│   └── appStore.ts                # Zustand global state
+└── lib/                           # Utilities
 ```
 
 ## Key Design Patterns
 
-### 1. App Router Pattern
+### 1. Section-Based Rendering
+The main `page.tsx` acts as a single-page application shell. The `activeSection` state in Zustand determines which component renders in the content area. All sections share the same sidebar and header.
 
-Uses Next.js App Router with file-based routing:
-```
-src/app/
-├── page.tsx           # Route: /
-├── about/page.tsx     # Route: /about
-├── blog/
-│   ├── page.tsx       # Route: /blog
-│   └── [slug]/page.tsx # Route: /blog/:slug
-└── api/
-    └── route.ts       # API Route: /api
-```
+### 2. Component-per-Section
+Each major feature (Chat, Voice, Media, Podcast, Memory, Settings) is a self-contained component with its own local state, imported by the main page.
 
-### 2. Component Organization Pattern (When Expanding)
+### 3. Zustand for Global State
+Navigation state, chat threads, podcast seats, voice settings, and user profile are managed in a single Zustand store (`appStore.ts`).
 
-```
-src/components/
-├── ui/                # Reusable UI components (Button, Card, etc.)
-├── layout/            # Layout components (Header, Footer)
-├── sections/          # Page sections (Hero, Features, etc.)
-└── forms/             # Form components
-```
+### 4. CSS Custom Properties via Tailwind v4
+The `@theme` block in `globals.css` defines all UVB color tokens. These are used throughout via Tailwind classes like `bg-uvb-deep-teal`, `text-uvb-neon-green`.
 
-### 3. Server Components by Default
-
-All components are Server Components unless marked with `"use client"`:
-```tsx
-// Server Component (default) - can fetch data, access DB
-export default function Page() {
-  return <div>Server rendered</div>;
-}
-
-// Client Component - for interactivity
-"use client";
-export default function Counter() {
-  const [count, setCount] = useState(0);
-  return <button onClick={() => setCount(c => c + 1)}>{count}</button>;
-}
-```
-
-### 4. Layout Pattern
-
-Layouts wrap pages and can be nested:
-```tsx
-// src/app/layout.tsx - Root layout
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  );
-}
-
-// src/app/dashboard/layout.tsx - Nested layout
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex">
-      <Sidebar />
-      <main>{children}</main>
-    </div>
-  );
-}
-```
+### 5. Server Components by Default
+Layout and API routes are Server Components. All interactive sections use `"use client"`.
 
 ## Styling Conventions
 
-### Tailwind CSS Usage
-- Utility classes directly on elements
-- Component composition for repeated patterns
-- Responsive: `sm:`, `md:`, `lg:`, `xl:`
-
-### Common Patterns
-```tsx
-// Container
-<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-// Responsive grid
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-// Flexbox centering
-<div className="flex items-center justify-center">
-```
-
-## File Naming Conventions
-
-- Components: PascalCase (`Button.tsx`, `Header.tsx`)
-- Utilities: camelCase (`utils.ts`, `helpers.ts`)
-- Pages/Routes: lowercase (`page.tsx`, `layout.tsx`)
-- Directories: kebab-case (`api-routes/`) or lowercase (`components/`)
+- Tailwind v4 CSS-first configuration
+- Custom utility classes: `.galaxy-bg`, `.glass-panel`, `.neon-text`, `.btn-primary`, `.btn-ghost`, `.input-field`, `.uvb-card`
+- Animated keyframes: `pulse-glow`, `laser-sweep`, `spark`
+- Framer Motion for all transitions and animations
 
 ## State Management
 
-For simple needs:
-- `useState` for local component state
-- `useContext` for shared state
-- Server Components for data fetching
-
-For complex needs (add when necessary):
-- Zustand for client state
-- React Query for server state
+| State | Store | Type |
+|-------|-------|------|
+| Navigation | `appStore` | `sidebarOpen`, `activeSection` |
+| Chat | `appStore` | `threads[]`, `activeThreadId`, `isRecording` |
+| Voice | `appStore` | `isVoiceActive`, `voiceInputLevel` |
+| Podcast | `appStore` | `podcastSeats[]` |
+| User | `appStore` | `currentUser` |
+| UI | `appStore` | `showCommandPalette` |

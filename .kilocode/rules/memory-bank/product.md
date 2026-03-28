@@ -1,44 +1,39 @@
-# Product Context: Next.js Starter Template
+# Product Context: Ultimate Voice Bridge (UVB)
 
-## Why This Template Exists
+## Why This Project Exists
 
-Starting a new Next.js project involves boilerplate setup, configuration decisions, and establishing patterns. This template provides a clean, opinionated starting point that eliminates setup friction and establishes best practices from the start. It's optimized for AI-assisted development, where an AI can quickly extend the template based on user requirements.
+The gap between powerful local LLMs and intuitive human interaction is frustratingly large. The Ultimate Voice Bridge aims to be the elegant, feature-rich interface that makes AI capabilities accessible through beautiful design and thoughtful UX. It bridges the power of models like GGUF-quantized LLMs with the diverse ways humans communicate.
 
 ## Problems It Solves
 
-1. **Setup Time**: Eliminates boilerplate configuration (TypeScript, Tailwind, ESLint)
-2. **Decision Fatigue**: Pre-made choices for tooling and patterns
-3. **AI Context**: Memory bank provides persistent context for AI assistants
-4. **Extensibility**: Recipe system for adding common features
-5. **Consistency**: Standardized project structure and conventions
+1. **Fragmented AI Tools**: Consolidates chat, voice, media, and memory into one interface
+2. **Poor UX in AI Tools**: Provides a stunning, dark-mode galaxy-themed UI with neon accents
+3. **Voice Processing Complexity**: Scientific voice analysis with intuitive visualizations
+4. **Podcast Creation Barriers**: Multi-seat podcast studio with zero-shot voice cloning
+5. **Knowledge Management**: RAG-powered memory for persistent, searchable context
 
 ## How It Should Work (User Flow)
 
-1. User starts with this template
-2. User describes what they want to build to AI assistant
-3. AI adds pages, components, and features as needed
-4. AI uses recipes for common additions (database, auth)
-5. User previews changes via hot reload
-6. Iterate until satisfied
-7. Deploy
+1. User opens UVB in their browser (dark galaxy UI loads with particles)
+2. Sidebar navigation provides access to 6 main sections
+3. **Chat**: Talk to KnightBot via text or voice, upload images/videos
+4. **Voice Analysis**: Upload/record audio, see spectral metrics, restore quality
+5. **Media Studio**: Upload images/videos for AI captioning and understanding
+6. **Podcast Studio**: Configure seats, assign voice profiles, record multi-track
+7. **Memory Bank**: Search, browse, and manage persistent AI memories
+8. **Settings**: Configure LLM, voice, appearance, security, and notifications
 
 ## Key User Experience Goals
 
-- **Zero to Feature Fast**: Get building immediately, no setup required
-- **AI-Friendly**: Memory bank and recipes make AI assistance effective
-- **Flexible Foundation**: Can become any type of application
-- **Best Practices Built-In**: TypeScript strict mode, ESLint, clean structure
+- **Visual Impact**: Galaxy gradients, neon greens, particle animations, dynamic shadows
+- **Dark Mode First**: Steel blues, deep teals, matte blacks, royal purples
+- **Smooth Animations**: Framer Motion page transitions, hover effects, status pulses
+- **Intuitive Navigation**: Sidebar with active indicators, command palette, keyboard shortcuts
+- **Responsive Design**: Works across screen sizes with collapsible sidebar
 
-## What This Template Provides
+## UI Design Language
 
-1. **Clean App Structure**: Single page ready for expansion
-2. **Type Safety**: Full TypeScript setup with strict mode
-3. **Modern Styling**: Tailwind CSS 4 ready to use
-4. **Code Quality**: ESLint configured
-5. **Extensibility**: Recipe system for common features
-
-## Integration Points
-
-- **Database**: Use add-database recipe for Drizzle + SQLite
-- **Styling**: Tailwind CSS pre-configured
-- **AI Assistance**: Memory bank for context persistence
+- **Colors**: Steel blue (#4a6fa5), deep teal (#0d4f4f), neon green (#39ff14), brushed silver, matte black, royal purple
+- **Fonts**: Orbitron (display), Inter (body), JetBrains Mono (code)
+- **Effects**: Particle canvas, glow orbs, scan lines, glass panels, 3D text
+- **States**: Animated indicators, pulsing status dots, laser-sweep loading

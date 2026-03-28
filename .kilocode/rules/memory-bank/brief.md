@@ -1,48 +1,57 @@
-# Project Brief: Next.js Starter Template
+# Project Brief: Ultimate Voice Bridge (UVB) — KnightBot AI Assistant
 
 ## Purpose
 
-This is a minimal Next.js starter template designed for AI-assisted development. It provides a clean foundation that can be extended to build any type of web application through interaction with an AI assistant.
+The Ultimate Voice Bridge is an AI-Human interface suite featuring the KnightBot AI Assistant. It provides a unified, modular web application for multi-modal AI interaction including text chat, voice analysis, media understanding, podcast creation, and persistent memory management.
 
 ## Target Users
 
-- Developers wanting a clean Next.js starting point
-- Users building applications through AI-assisted coding
-- Teams needing a standardized, modern Next.js setup
+- Developers and power users running local LLMs (LM Studio, Ollama)
+- Content creators needing voice cloning and podcast production tools
+- Researchers requiring vision analytics, audio assessment, and RAG-based memory
+- Anyone wanting a cohesive AI assistant interface on their local machine
 
 ## Core Use Case
 
-Users describe what they want to build to an AI assistant, which then expands this template by:
-
-1. Adding components and pages as needed
-2. Installing additional dependencies
-3. Setting up databases, authentication, etc. using recipes
-4. Customizing styling and branding
+Users interact with KnightBot through a dark-mode-first, galaxy-themed UI to:
+1. Chat with an AI assistant supporting text, voice, image, and video inputs
+2. Analyze and process voice recordings with scientific metrics
+3. Caption images and understand video content
+4. Create multi-seat podcasts with voice cloning
+5. Store and retrieve knowledge via a RAG-powered memory bank
+6. Configure LLM, voice, and system settings
 
 ## Key Requirements
 
 ### Must Have
-
-- Modern Next.js 16 setup with App Router
-- TypeScript for type safety
-- Tailwind CSS 4 for styling
-- ESLint for code quality
-- Clean, minimal starting structure
-- Bun as package manager
+- Dark mode-first UI/UX with galaxy/neon aesthetic
+- Multi-modal chat (text, voice, image, video)
+- Voice analysis with real-time visualization
+- Image captioning and video understanding
+- Podcast creation with configurable seats and voice cloning
+- RAG-based persistent memory bank
+- Animated particle/galaxy background
+- Responsive sidebar navigation
+- Zustand state management
+- Framer Motion animations
 
 ### Nice to Have
-
-- Recipe system for common additions (database, auth)
-- Memory bank for AI context persistence
-- Clear development guidelines
+- Command palette (⌘K)
+- User profiles with password protection
+- Thread branching and auto-saving
+- Barge-in voice support
+- Browser-based STT/TTS integration
 
 ## Success Metrics
 
-- Clean, zero-error TypeScript setup
-- Passing lint and type checks
+- Clean TypeScript compilation and passing lint checks
+- Modular, extensible architecture
+- Beautiful, flowing UI with galaxy gradients and neon accents
+- All 6 main sections functional (Chat, Voice, Media, Podcast, Memory, Settings)
 
 ## Constraints
 
-- Minimal dependencies by default
-- Framework: Next.js 16 + React 19 + Tailwind CSS 4
+- Next.js 16 + React 19 + Tailwind CSS 4
 - Package manager: Bun
+- Frontend-only in this phase (backend AI services are external)
+- Designed for high-end consumer PCs (i9 14900KF, 64GB RAM, RTX 5090)

@@ -21,8 +21,8 @@ export function GlowOrb({
     <motion.div
       className="absolute rounded-full pointer-events-none"
       style={{
-        width: size,
-        height: size,
+        width: `${size}px`,
+        height: `${size}px`,
         left: x,
         top: y,
         background: `radial-gradient(circle, ${color}20 0%, ${color}05 40%, transparent 70%)`,

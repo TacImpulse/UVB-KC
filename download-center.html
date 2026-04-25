@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVB-KnightBot - Download Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            color: #e94560;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+        .file-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .file-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+        .file-name {
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        .file-size {
+            color: #888;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
+        .btn {
+            display: inline-block;
+            background: #e94560;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .btn:hover {
+            background: #ff6b6b;
+            transform: scale(1.02);
+        }
+        .btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .status {
+            color: #4ecca3;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+        .instructions {
+            color: #aaa;
+            font-size: 0.8em;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            line-height: 1.6;
+        }
+        .spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>UVB-KnightBot</h1>
+        <p class="subtitle">Export Download Center</p>
+
+        <div class="file-card" id="deployment-card">
+            <div class="file-name">UVB-KnightBot-Complete-Deployment.zip</div>
+            <div class="file-size">172 MB (includes node_modules - ready to deploy)</div>
+            <button class="btn" id="download-deployment" onclick="downloadDeployment()">
+                Download Complete Archive
+            </button>
+            <div class="status" id="deployment-status"></div>
+        </div>
+
+        <div class="file-card" id="log-card">
+            <div class="file-name">UVB-KnightBot-Session-Log.md</div>
+            <div class="file-size">4.4 KB (complete chat session transcript)</div>
+            <button class="btn" id="download-log" onclick="downloadLog()">
+                Download Session Log
+            </button>
+            <div class="status" id="log-status"></div>
+        </div>
+
+        <div class="instructions">
+            <strong>Deployment Instructions:</strong><br>
+            1. Extract the zip file<br>
+            2. Run <code>bun dev</code> for development, or <code>bun build && bun start</code> for production<br>
+            3. Access at <code>http://localhost:3000</code><br><br>
+            <strong>Requirements:</strong> Node.js 18+, Bun package manager
+        </div>
+    </div>
+
+    <script>
+        const WORKSPACE_BASE = '/workspace/d611983a-6600-4037-bb40-4f69390fdee2/sessions/agent_bc462f5c-8ba1-414c-99b3-8cd9b77208ce';
+
+        async function fetchFile(filename) {
+            try {
+                const response = await fetch(`${WORKSPACE_BASE}/${filename}`);
+                if (!response.ok) throw new Error('File not found');
+                return await response.blob();
+            } catch (error) {
+                // Try alternative endpoint
+                try {
+                    const altResponse = await fetch(`/api/files/${filename}`);
+                    if (!altResponse.ok) throw new Error('Alternative endpoint failed');
+                    return await altResponse.blob();
+                } catch (e) {
+                    throw new Error('Could not access file from workspace');
+                }
+            }
+        }
+
+        function downloadBlob(blob, filename) {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+
+        async function downloadDeployment() {
+            const btn = document.getElementById('download-deployment');
+            const status = document.getElementById('deployment-status');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>Preparing...';
+            status.textContent = '';
+
+            try {
+                status.textContent = 'Fetching 172 MB archive...';
+                const blob = await fetchFile('UVB-KnightBot-Complete-Deployment.zip');
+                status.textContent = 'Download starting...';
+                downloadBlob(blob, 'UVB-KnightBot-Complete-Deployment.zip');
+                status.textContent = 'Download complete!';
+                status.style.color = '#4ecca3';
+            } catch (error) {
+                status.textContent = 'Error: ' + error.message;
+                status.style.color = '#e94560';
+                btn.disabled = false;
+                btn.textContent = 'Retry Download';
+            }
+        }
+
+        async function downloadLog() {
+            const btn = document.getElementById('download-log');
+            const status = document.getElementById('log-status');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>Preparing...';
+            status.textContent = '';
+
+            try {
+                const blob = await fetchFile('UVB-KnightBot-Session-Log.md');
+                downloadBlob(blob, 'UVB-KnightBot-Session-Log.md');
+                status.textContent = 'Download complete!';
+                status.style.color = '#4ecca3';
+            } catch (error) {
+                status.textContent = 'Error: ' + error.message;
+                status.style.color = '#e94560';
+                btn.disabled = false;
+                btn.textContent = 'Retry Download';
+            }
+        }
+    </script>
+</body>
+</html>

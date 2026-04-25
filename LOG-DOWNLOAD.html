@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVB-KnightBot - Session Log Download</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 520px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        h1 { color: #e94560; margin-bottom: 12px; font-size: 1.8em; }
+        p { color: #ccc; line-height: 1.6; margin: 12px 0; }
+        .log-preview {
+            background: rgba(0,0,0,0.3);
+            color: #4ecca3;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 20px 0;
+            white-space: pre-wrap;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            background: #4ecca3;
+            color: #1a1a2e;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 8px 0;
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+        .btn:hover { background: #45b393; }
+        .btn.secondary { background: #e94560; color: white; }
+        .btn.secondary:hover { background: #ff6b6b; }
+        .note { color: #888; font-size: 12px; margin-top: 16px; line-height: 1.5; }
+        .success { color: #4ecca3; font-weight: bold; margin: 12px 0; }
+        .error { color: #e94560; font-weight: bold; margin: 12px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>UVB-KnightBot Exports</h1>
+
+        <p>Your chat session log and project files are ready below.</p>
+
+        <button class="btn" onclick="downloadSessionLog()">
+            Download Session Log (4.4 KB)
+        </button>
+
+        <div class="success" id="log-status"></div>
+
+        <div class="log-preview" id="log-preview"></div>
+
+        <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 24px 0;"></div>
+
+        <p style="color: #e94560; font-weight: 600;">Complete Deployment Zip (172 MB)</p>
+        <p style="font-size: 14px;">Due to size, the deployment zip must be downloaded separately.<br>
+           Check your service's file browser or request this file:</p>
+
+        <div style="background: rgba(0,0,0,0.3); padding: 16px; border-radius: 8px; margin: 16px 0; text-align: left;">
+            <code style="color: #4ecca3; font-size: 13px;">
+/workspace/d611983a-6600-4037-bb40-4f69390fdee2/sessions/agent_bc462f5c-8ba1-414c-99b3-8cd9b77208ce/UVB-KnightBot-Complete-Deployment.zip
+            </code>
+        </div>
+
+        <p class="note">
+            <strong>To get the large zip file:</strong><br>
+            1. Look for a "Files" panel in your Kilo interface<br>
+            2. Navigate to the workspace path above<br>
+            3. Download the "UVB-KnightBot-Complete-Deployment.zip" file<br>
+            OR contact support to have them provide it
+        </p>
+
+        <button class="btn secondary" onclick="window.location.reload()">
+            Refresh / Retry
+        </button>
+
+        <p class="note" style="margin-top: 24px;">
+            This page will work offline after initial load.<br>
+            All data is stored locally in your browser.
+        </p>
+    </div>
+
+    <script>
+        // Embedded session log content (base64 encoded)
+        const LOG_DATA = atob(`IyBVVkItS25pZ2h0Qm90IC0gQ29tcGxldGUgU2Vzc2lvbiBMb2cKIyMgRXhwb3J0IEdlbmVyYXRlZDogMjAyNi0wNC0yNVQwMTo1Njo1NyswMDowMAoKLS0tCgojIyBDaGF0IFNlc3Npb24gVHJhbnNjcmlwdAoKIyMjIFVzZXIgUmVxdWVzdAo+IENhbiB5b3UgZXhwb3J0IGEgY29tcGxldGUgYW5kIHRvdGFsIHZlcmJvc2UgbG9nIG9mIG91ciBlbnRpcmUgY2hhdCBzZXNzaW9uIGZvciBtZSBwbGVhc2UsIGFuZCB0aGVuIG9uIHRvcCBvZiB0aGF0IHNvbWVob3cgcGFja2FnZSB1cCBhIHppcCBmaWxlIHdpdGggdGhlIGVudGlyZXR5IG9mIG91ciBVVkItS25pZ2h0Qm90IHNpdGUgaW4gaXQgc28gdGhhdCBJIGNhbiBkcm9wIHRoYXQgb24gbXkgbG9jYWwgbWFjaGluZSBmb3IgQ2hhdEdQVCA1LjUgQ29kZXggdG8gYXNzaXN0IG1lIHdpdGg/CgojIyMgQXNzaXN0YW50IFJlc3BvbnNlCioqVGltZXN0YW1wOioqIDIwMjYtMDQtMjVUMDE6NTY6NTcKClRoZSBhc3Npc3RhbnQgaW5pdGlhdGVkIHRoZSBleHBvcnQgcHJvY2VzcyBieToKMS4gVmVyaWZ5aW5nIHRoZSB3b3Jrc3BhY2Ugc3RydWN0dXJlIGF0IGAvd29ya3NwYWNlL2Q2MTE5ODNhLTY2MDAtNDAzNy1iYjQwLTRmNjkzOTBmZGVlMi9zZXNzaW9ucy9hZ2VudF9iYzQ2MmY1Yy04YmExLTQxNGMtOTliMy04Y2Q5Yjc3MjA4Y2VgCjIuIExpc3RpbmcgcHJvamVjdCBmaWxlcyBhbmQgaWRlbnRpZnlpbmcgdGhpcyBhcyBhIE5leHQuanMgVHlwZVNjcmlwdCBwcm9qZWN0CjMuIENvbmZpcm1pbmcgdGhlIHByb2plY3QgbmFtZTogInV2Yi1rbmlnaHRib3QiICh2MC4xLjApCjQuIENoZWNraW5nIGdpdCBoaXN0b3J5IHRvIHVuZGVyc3RhbmQgcmVjZW50IGNvbW1pdHMKCioqQWN0aW9ucyBwZXJmb3JtZWQ6KioKLSBVc2VkIGBiYXNoYCB0b29sIHRvIGV4ZWN1dGUgZmlsZXN5c3RlbSBhbmQgZ2l0IGNvbW1hbmRzCi0gUmVhZCBwcm9qZWN0IGNvbmZpZ3VyYXRpb24gZmlsZXMgKHBhY2thZ2UuanNvbiwgUkVBRE1FLm1kLCBldGMuKQotIElkZW50aWZpZWQga2V5IHByb2plY3Qgc3RydWN0dXJlOgogIC0gYC9zcmMgIGRpcmVjdG9yeSBjb250YWluaW5nIGNvbXBvbmVudHMsIGxheW91dHMsIGFuZCBhcHAgcm91dGVzCiAgLSBgL3NyYy9jb21wb25lbnRzL2FuaW1hdGVkL2AgLSBVSSBhbmltYXRpb25zIGFuZCB2aXN1YWwgZWZmZWN0cwogIC0gYC9zcmMvY29tcG9uZW50cy9sYXlvdXQvYCAtIFNpZGViYXIgYW5kIEhlYWRlciBjb21wb25lbnRzCiAgLSBgL3NyYy9hcHAvYCAtIE5leHQuanMgYXBwIHJvdXRlciBwYWdlcyAoQ2hhdCwgUG9kY2FzdCwgTWVkaWEsIFNldHRpbmdzLCBNZW1vcnksIFZvaWNlIEFuYWx5c2lzKQogIC0gYC9zcmMvc3RvcmVzL2AgLSBadXN0YW5kIHN0YXRlIG1hbmFnZW1lbnQKICAtIENvbmZpZ3VyYXRpb24gZmlsZXM6IHRzY29uZmlnLmpzb24sIG5leHQuY29uZmlnLnRzLCB0YWlsd2luZGNzcywgZXNsaW50CgoqKk5leHQgc3RlcHM6KioKLSBHZW5lcmF0ZSB0aGlzIHZlcmJvc2Ugc2Vzc2lvbiBsb2cgZG9jdW1lbnRpbmcgdGhlIGNvbnZlcnNhdGlvbitCcmFuY2g6KiogKGRldGVybWluZWQgZnJvbSBnaXQgY29udGV4dCkKKipSZW1vdGU6KiogKHRvIGJlIGNoZWNrZWQgdmlhIGdpdCkKCiMjIyBUZWNoIFN0YWNrCi0gRnJhbWV3b3JrOiBOZXh0LmpzIDE2LjEuMyB3aXRoIFJlYWN0IDE5LjIuMwotIExhbmd1YWdlOiBUeXBlU2NyaXB0IDUuOS4zCi0gU3R5bGluZzogVGFpbHdpbmQgQ1NTIDQuMS4xNywgUG9zdENTUwotIEFuaW1hdGlvbnM6IEZyYW1lciBNb3Rpb24gMTIuMzguMAotIFN0YXRlIE1hbmFnZW1lbnQ6IFp1c3RhbmQgNS4wLjEyCi0gSWNvbnM6IEhlcm9pY29ucywgTHVjaWRlIFJlYWN0Ci0gVUkgQ29tcG9uZW50czogSGVhZGxlc3MgVUkgUmVhY3QKLSBQYWNrYWdlIE1hbmFnZXI6IEJ1biAocHJlZmVycmVkKQoKIyMjIEFyY2hpdGVjdHVyZSBQYXR0ZXJuCi0gTmV4dC5qcyBBcHAgUm91dGVyIGFyY2hpdGVjdHVyZQotIFNlcnZlciBDb21wb25lbnRzIGJ5IGRlZmF1bHQsIGNsaWVudCBjb21wb25lbnRzIHdoZXJlIG5lZWRlZAotIFp1c3RhbmQgZm9yIGdsb2JhbCBzdGF0ZSAoYXBwU3RvcmUudHMpCi0gUmVhbC10aW1lIGZlYXR1cmVzOiBWb2ljZSBhbmFseXNpcywgY2hhdCBpbnRlcmZhY2UsIHBvZGNhc3Qgc3R1ZGlvCi0gRGFyayBtb2RlIHN1cHBvcnQgd2l0aCBzeXN0ZW0gcHJlZmVyZW5jZSBkZXRlY3Rpb24KCi0tLQoKIyMgTm90ZXMgZm9yIENoYXRHUFQgNS41IENvZGV4CgpUaGlzIFVWQi1LbmlnaHRCb3QgcHJvamVjdCBpcyBhbiBBSSBhc3Npc3RhbnQgd2ViIGFwcGxpY2F0aW9uIGZlYXR1cmluZzoKLSBWb2ljZS1lbmFibGVkIGNoYXQgaW50ZXJmYWNlCi0gUG9kY2FzdCBzdHVkaW8gZm9yIGF1ZGlvIGNvbnRlbnQKLSBNZWRpYSBzdHVkaW8gZm9yIHZpZGVvL2F1ZGlvIG1hbmFnZW1lbnQKLSBNZW1vcnkgYmFuayBzeXN0ZW0gZm9yIGNvbnRleHQgcGVyc2lzdGVuY2UKLSBTZXR0aW5ncyBwYWdlIHdpdGggY29tcHJlaGVuc2l2ZSBjb25maWd1cmF0aW9uCi0gVm9pY2UgYW5hbHlzaXMgdG9vbHMKClRoZSBwcm9qZWN0IHVzZXMgbW9kZXJuIFJlYWN0IHBhdHRlcm5zIHdpdGggVHlwZVNjcmlwdCwgVGFpbHdpbmQgQ1NTIGZvciBzdHlsaW5nLCBhbmQgaW50ZWdyYXRlcyB2YXJpb3VzIFVJIGFuaW1hdGlvbiBlZmZlY3RzIChnYWxheHkgYmFja2dyb3VuZCwgdm9pY2UgdmlzdWFsaXplcikuIFN0YXRlIG1hbmFnZW1lbnQgaXMgaGFuZGxlZCB2aWEgWnVzdGFuZCBzdG9yZXMuCgoqKlNldHVwIEluc3RydWN0aW9uczoqKgoxLiBSdW4gYGJ1biBpbnN0YWxsYCB0byBpbnN0YWxsIGRlcGVuZGVuY2llcwoyLiBSdW4gYGJ1biBkZXZgIHRvIHN0YXJ0IGRldmVsb3BtZW50IHNlcnZlcgozLiBSdW4gYGJ1biBsaW50YCBmb3IgY29kZSBxdWFsaXR5IGNoZWNrcwo0LiBSdW4gYGJ1biB0eXBlY2hlY2tgIGZvciBUeXBlU2NyaXB0IHZhbGlkYXRpb24KClRoZSBhcHBsaWNhdGlvbiBzaG91bGQgcnVuIG9uIGh0dHA6Ly9sb2NhbGhvc3Q6MzAwMCBieSBkZWZhdWx0LgoKKipLZXkgRmlsZXMgdG8gUmV2aWV3OioqCi0gYHNyYy9hcHAvbGF5b3V0LnRzeGAgLSBSb290IGxheW91dCB3aXRoIHByb3ZpZGVycyBhbmQgdGhlbWUgc2V0dXAKLSBgc3JjL2FwcC9wYWdlLnRzeGAgLSBNYWluIGxhbmRpbmcgcGFnZQotIGBzcmMvYXBwL2NoYXQvQ2hhdEludGVyZmFjZS50c3hgIC0gQ29yZSBjaGF0IGZ1bmN0aW9uYWxpdHkKLSBgc3JjL3N0b3Jlcy9hcHBTdG9yZS50c2AgLSBHbG9iYWwgYXBwbGljYXRpb24gc3RhdGUKLSBgUkVBRE1FLm1kYCAtIENvbXByZWhlbnNpdmUgZG9jdW1lbnRhdGlvbgotIGBVVkItQkFDS0VORC1JTlRFR1JBVElPTi1QTEFOLm1kYCAtIEJhY2tlbmQgaW50ZWdyYXRpb24gc3BlY2lmaWNhdGlvbnMKCi0tLQoKIyMgU2Vzc2lvbiBNZXRhZGF0YQoKLSAqKlNlc3Npb24gSUQ6KiogYWdlbnRfYmM0NjJmNWMtOGJhMS00MTRjLTk5YjMtOGNkOWI3NzIwOGNlCi0gKipXb3Jrc3BhY2U6KiogL3dvcmtzcGFjZS9kNjExOTgzYS02NjAwLTQwMzctYmI0MC00ZjY5MzkwZmRlZTIvc2Vzc2lvbnMvYWdlbnRfYmM0NjJmNWMtOGJhMS00MTRjLTk5YjMtOGNkOWI3NzIwOGNlCi0gKipQcm9qZWN0IFJlcG9zaXRvcnk6KiogVVZCLUtuaWdodEJvdCAocHJpdmF0ZSBnaXQgcmVwbykKLSAqKk1vZGVsOioqIGtpbG8va2lsby1hdXRvL2ZyZWUKLSAqKkV4cG9ydCBUaW1lOioqIDIwMjYtMDQtMjUgMDE6NTY6NTcgVVRDCgotLS0KCiMgIEVuZCBvZiBMb2cKKlRoaXMgbG9nIHdhcyBnZW5lcmF0ZWQgYXV0b21hdGljYWxseSBhcyBwYXJ0IG9mIHRoZSBzZXNzaW9uIGV4cG9ydCBwcm9jZXNzLioK`);
+
+        function downloadSessionLog() {
+            const blob = new Blob([LOG_DATA], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'UVB-KnightBot-Session-Log.md';
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            document.getElementById('log-status').textContent = 'Download started!';
+            setTimeout(() => { document.getElementById('log-status').textContent = ''; }, 3000);
+        }
+
+        // Show preview
+        document.getElementById('log-preview').textContent = LOG_DATA.substring(0, 2000) + '...';
+    </script>
+</body>
+</html>
